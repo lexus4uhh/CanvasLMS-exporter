@@ -6,6 +6,7 @@ import os
 
 import requests
 from dotenv import load_dotenv
+from requests.sessions import Session, session
 
 load_dotenv()
 
@@ -14,14 +15,17 @@ TOKEN = os.getenv("CanvasLMS_token")
 DOMAIN = os.getenv("CanvasLMS_domain")
 
 # auth headers and url setup
-url = f"https://{DOMAIN}/api/v1/courses"
-headers = {
+base_url = f"https://{DOMAIN}/api/v1"
+
+session = requests.Session()
+session.headers.update({
     "Authorization": f"Bearer {TOKEN}",
-    "Accept": "application/json"
-}
+    "Accept": "application/json",
+    "User-Agent": "Canvas-exporter"
+})
 
 # GET response
-response = requests.get(url, headers=headers)
+response = session.get(f"{base_url}/courses", params={"per_page": 100})
 
 # process response
 if response.status_code == 200:
