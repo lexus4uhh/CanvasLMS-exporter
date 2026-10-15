@@ -3,6 +3,7 @@
 # =========
 
 import os
+from urllib.parse import urlparse
 
 import requests
 from dotenv import load_dotenv
@@ -37,8 +38,9 @@ class Collector:
             params = None
         return results, headers
 
-    def _to_api(self, User_url):
-        return User_url.replace(self.DOMAIN, f"{self.DOMAIN}/api/v1")
+    def _to_api(self, user_url: str) -> str:
+        u = urlparse(user_url)
+        return f"https://{u.netloc}/api/v1{u.path}" + (f"?{u.query}" if u.query else "")
 
     def collect(self, url, params=None):
         api_url = self._to_api(url)
