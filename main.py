@@ -2,6 +2,7 @@
 # HTTP request to canvas LMS with auth token to get user info and courses list
 # =========
 
+import json
 import os
 
 import requests
@@ -45,3 +46,6 @@ courses, _ = get_all(session, f"{BASE_URL}/courses", {"per_page": 100})
 print(len(courses))
 for c in courses:
     print(f"- {c.get('name', 'Unnamed')} ({c.get('id', 'No ID')})")
+
+with open("./output/courses.json", "w", encoding="utf-8") as f:
+    json.dump(courses, f, ensure_ascii=False, indent=2)
